@@ -1,0 +1,25 @@
+---
+- name: Change MySQL root password
+  mysql_user: name=root host={{ item }} password={{ zabbix3proxy_dbrootpassword }}
+  with_items:
+    - 127.0.0.1
+    - ::1      
+    - localhost
+
+- name: Create my.cnf with root credentials
+  template: src=my.cnf.j2 dest=~/.my.cnf
+
+- name: Create MySQL DB
+  mysql_db: name={{ zabbix3proxy_dbname }} state=present
+  register: create_db
+
+- name: Import MySQL DB
+  mysql_db: name={{ zabbix3proxy_dbname }} state=import target={{ item }}
+  with_items:
+    - "{{ zabbix3proxy_tar.dest | dirname }}/zabbix-{{ zabbix3proxy_betaversion }}/database/mysql/schema.sql"
+  when: create_db.changed != False
+
+- name: Grant privileges to MySQL DB
+#  mysql_user: name={{ zabbix3proxy_dbuser }} password={{ zabbix3proxy_dbuserpassword }} priv:{{ zabbix3proxy_dbname }}.*:GRANT state=present
+#  the above is not working in Ansible 2.0.0.2 (issue #14062), for now, use the below
+  command: mysql -u root -e 'grant all privileges on {{ zabbix3proxy_dbname }}.* to {{ zabbix3proxy_dbuser }}@{{ zabbix3proxy_dbhost }} identified by "{{ zabbix3proxy_dbuserpassword }}";'

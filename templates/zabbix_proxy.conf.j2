@@ -1,0 +1,650 @@
+# This is a configuration file for Zabbix proxy daemon
+# To get more information about Zabbix, visit http://www.zabbix.com
+
+############ GENERAL PARAMETERS #################
+
+### Option: ProxyMode
+#	Proxy operating mode.
+#	0 - proxy in the active mode
+#	1 - proxy in the passive mode
+#
+# Mandatory: no
+# Default:
+ProxyMode={{ zabbix3proxy_proxymode }}
+
+### Option: Server
+#	IP address (or hostname) of Zabbix server.
+#	Active proxy will get configuration data from the server.
+#	For a proxy in the passive mode this parameter will be ignored.
+#
+# Mandatory: yes (if ProxyMode is set to 0)
+# Default:
+# Server=
+
+Server={{ zabbix3proxy_server }}
+
+### Option: ServerPort
+#	Port of Zabbix trapper on Zabbix server.
+#	For a proxy in the passive mode this parameter will be ignored.
+#
+# Mandatory: no
+# Range: 1024-32767
+# Default:
+ServerPort={{ zabbix3proxy_serverport }}
+
+### Option: Hostname
+#	Unique, case sensitive Proxy name. Make sure the Proxy name is known to the server!
+#	Value is acquired from HostnameItem if undefined.
+#
+# Mandatory: no
+# Default:
+Hostname={{ ansible_hostname }}
+
+### Option: HostnameItem
+#	Item used for generating Hostname if it is undefined.
+#	Ignored if Hostname is defined.
+#
+# Mandatory: no
+# Default:
+HostnameItem={{ zabbix3proxy_hostnameitem }}
+
+### Option: ListenPort
+#	Listen port for trapper.
+#
+# Mandatory: no
+# Range: 1024-32767
+# Default:
+ListenPort={{ zabbix3proxy_listenport }}
+
+### Option: SourceIP
+#	Source IP address for outgoing connections.
+#
+# Mandatory: no
+# Default:
+{% if zabbix3proxy_sourceip %}
+SourceIP={{ zabbix3proxy_sourceip }}
+{% endif %}
+
+### Option: LogType
+#	Specifies where log messages are written to:
+#		system  - syslog
+#		file    - file specified with LogFile parameter
+#		console - standard output
+#
+# Mandatory: no
+# Default:
+LogType={{ zabbix3proxy_logtype }}
+
+### Option: LogFile
+#	Log file name for LogType 'file' parameter.
+#
+# Mandatory: no
+# Default:
+# LogFile=
+LogFile=/tmp/zabbix_proxy.log
+
+### Option: LogFileSize
+#	Maximum size of log file in MB.
+#	0 - disable automatic log rotation.
+#
+# Mandatory: no
+# Range: 0-1024
+# Default:
+LogFileSize={{ zabbix3proxy_logfilesize }}
+
+### Option: DebugLevel
+#	Specifies debug level:
+#	0 - basic information about starting and stopping of Zabbix processes
+#	1 - critical information
+#	2 - error information
+#	3 - warnings
+#	4 - for debugging (produces lots of information)
+#	5 - extended debugging (produces even more information)
+#
+# Mandatory: no
+# Range: 0-5
+# Default:
+{% if zabbix3proxy_debuglevel %}
+DebugLevel={{ zabbix3proxy_debuglevel }}
+{% endif %}
+
+### Option: PidFile
+#	Name of PID file.
+#
+# Mandatory: no
+# Default:
+PidFile={{ zabbix3proxy_pidfile }}
+
+### Option: DBHost
+#	Database host name.
+#	If set to localhost, socket is used for MySQL.
+#	If set to empty string, socket is used for PostgreSQL.
+#
+# Mandatory: no
+# Default:
+DBHost={{ zabbix3proxy_dbhost }}
+
+### Option: DBName
+#	Database name.
+#	For SQLite3 path to database file must be provided. DBUser and DBPassword are ignored.
+#	Warning: do not attempt to use the same database Zabbix server is using.
+#
+# Mandatory: yes
+# Default:
+# DBName=
+DBName={{ zabbix3proxy_dbname }}
+
+### Option: DBSchema
+#	Schema name. Used for IBM DB2 and PostgreSQL.
+#
+# Mandatory: no
+# Default:
+{% if zabbix3proxy_dbschema %}
+DBSchema={{ zabbix3proxy_dbschema }}
+{% endif %}
+
+### Option: DBUser
+#	Database user. Ignored for SQLite.
+#
+# Default:
+# DBUser=
+DBUser={{ zabbix3proxy_dbuser }}
+
+### Option: DBPassword
+#	Database password. Ignored for SQLite.
+#	Comment this line if no password is used.
+#
+# Mandatory: no
+# Default:
+DBPassword={{ zabbix3proxy_dbuserpassword }}
+
+### Option: DBSocket
+#	Path to MySQL socket.
+#
+# Mandatory: no
+# Default:
+{% if zabbix3proxy_dbsocket %}
+DBSocket={{ zabbix3proxy_dbsocket }}
+{% endif %}
+
+# Option: DBPort
+#	Database port when not using local socket. Ignored for SQLite.
+#
+# Mandatory: no
+# Default (for MySQL):
+{% if zabbix3proxy_dbport %}
+DBPort={{ zabbix3proxy_dbport }}
+{% endif %}
+
+######### PROXY SPECIFIC PARAMETERS #############
+
+### Option: ProxyLocalBuffer
+#	Proxy will keep data locally for N hours, even if the data have already been synced with the server.
+#	This parameter may be used if local data will be used by third party applications.
+#
+# Mandatory: no
+# Range: 0-720
+# Default:
+ProxyLocalBuffer={{ zabbix3proxy_proxylocalbuffer }}
+
+### Option: ProxyOfflineBuffer
+#	Proxy will keep data for N hours in case if no connectivity with Zabbix Server.
+#	Older data will be lost.
+#
+# Mandatory: no
+# Range: 1-720
+# Default:
+ProxyOfflineBuffer={{ zabbix3proxy_proxyofflinebuffer }}
+
+### Option: HeartbeatFrequency
+#	Frequency of heartbeat messages in seconds.
+#	Used for monitoring availability of Proxy on server side.
+#	0 - heartbeat messages disabled.
+#	For a proxy in the passive mode this parameter will be ignored.
+#
+# Mandatory: no
+# Range: 0-3600
+# Default:
+HeartbeatFrequency={{ zabbix3proxy_heartbeatfrequency }}
+
+### Option: ConfigFrequency
+#	How often proxy retrieves configuration data from Zabbix Server in seconds.
+#	For a proxy in the passive mode this parameter will be ignored.
+#
+# Mandatory: no
+# Range: 1-3600*24*7
+# Default:
+ConfigFrequency={{ zabbix3proxy_configfrequency }}
+
+### Option: DataSenderFrequency
+#	Proxy will send collected data to the Server every N seconds.
+#	For a proxy in the passive mode this parameter will be ignored.
+#
+# Mandatory: no
+# Range: 1-3600
+# Default:
+DataSenderFrequency={{ zabbix3proxy_datasenderfrequency }}
+
+############ ADVANCED PARAMETERS ################
+
+### Option: StartPollers
+#	Number of pre-forked instances of pollers.
+#
+# Mandatory: no
+# Range: 0-1000
+# Default:
+StartPollers={{ zabbix3proxy_startpollers }}
+
+### Option: StartIPMIPollers
+#	Number of pre-forked instances of IPMI pollers.
+#
+# Mandatory: no
+# Range: 0-1000
+# Default:
+StartIPMIPollers={{ zabbix3proxy_startipmipollers }}
+
+### Option: StartPollersUnreachable
+#	Number of pre-forked instances of pollers for unreachable hosts (including IPMI and Java).
+#	At least one poller for unreachable hosts must be running if regular, IPMI or Java pollers
+#	are started.
+#
+# Mandatory: no
+# Range: 0-1000
+# Default:
+StartPollersUnreachable={{ zabbix3proxy_startpollersunreachable }}
+
+### Option: StartTrappers
+#	Number of pre-forked instances of trappers.
+#	Trappers accept incoming connections from Zabbix sender and active agents.
+#
+# Mandatory: no
+# Range: 0-1000
+# Default:
+StartTrappers={{ zabbix3proxy_starttrappers }}
+
+### Option: StartPingers
+#	Number of pre-forked instances of ICMP pingers.
+#
+# Mandatory: no
+# Range: 0-1000
+# Default:
+StartPingers={{ zabbix3proxy_startpingers }}
+
+### Option: StartDiscoverers
+#	Number of pre-forked instances of discoverers.
+#
+# Mandatory: no
+# Range: 0-250
+# Default:
+StartDiscoverers={{ zabbix3proxy_startdiscoverers }}
+
+### Option: StartHTTPPollers
+#	Number of pre-forked instances of HTTP pollers.
+#
+# Mandatory: no
+# Range: 0-1000
+# Default:
+StartHTTPPollers={{ zabbix3proxy_starthttppollers }}
+
+## Option: JavaGateway
+#   IP address (or hostname) of Zabbix Java gateway.
+#   Only required if Java pollers are started.
+#
+# Mandatory: no
+# Default:
+{% if zabbix3proxy_javagateway %}
+JavaGateway={{ zabbix3proxy_javagateway }}
+{% endif %}
+
+### Option: JavaGatewayPort
+#   Port that Zabbix Java gateway listens on.
+#
+# Mandatory: no
+# Range: 1024-32767
+# Default:
+#
+{% if zabbix3proxy_javagatewayport %}
+JavaGatewayPort={{ zabbix3proxy_javagatewayport }}
+{% endif %}
+
+### Option: StartJavaPollers
+#   Number of pre-forked instances of Java pollers.
+#
+# Mandatory: no
+# Range: 0-1000
+# Default:
+StartJavaPollers={{ zabbix3proxy_startjavapollers }}
+
+### Option: StartVMwareCollectors
+#	Number of pre-forked vmware collector instances.
+#
+# Mandatory: no
+# Range: 0-250
+# Default:
+StartVMwareCollectors={{ zabbix3proxy_startvmwarecollectors }}
+
+### Option: VMwareFrequency
+#	How often Zabbix will connect to VMware service to obtain a new data.
+#
+# Mandatory: no
+# Range: 10-86400
+# Default:
+VMwareFrequency={{ zabbix3proxy_vmwarefrequency }}
+
+### Option: VMwarePerfFrequency
+#	How often Zabbix will connect to VMware service to obtain performance data.
+#
+# Mandatory: no
+# Range: 10-86400
+# Default:
+VMwarePerfFrequency={{ zabbix3proxy_vmwareperffrequency }}
+
+### Option: VMwareCacheSize
+#	Size of VMware cache, in bytes.
+#	Shared memory size for storing VMware data.
+#	Only used if VMware collectors are started.
+#
+# Mandatory: no
+# Range: 256K-2G
+# Default:
+VMwareCacheSize={{ zabbix3proxy_vmwarecachesize }}
+
+### Option: VMwareTimeout
+#	Specifies how many seconds vmware collector waits for response from VMware service.
+#
+# Mandatory: no
+# Range: 1-300
+# Default:
+VMwareTimeout={{ zabbix3proxy_vmwaretimeout }}
+
+### Option: SNMPTrapperFile
+#	Temporary file used for passing data from SNMP trap daemon to the proxy.
+#	Must be the same as in zabbix_trap_receiver.pl or SNMPTT configuration file.
+#
+# Mandatory: no
+# Default:
+SNMPTrapperFile={{ zabbix3proxy_snmptrapperfile }}
+
+### Option: StartSNMPTrapper
+#	If 1, SNMP trapper process is started.
+#
+# Mandatory: no
+# Range: 0-1
+# Default:
+StartSNMPTrapper={{ zabbix3proxy_startsnmptrapper }}
+
+### Option: ListenIP
+#	List of comma delimited IP addresses that the trapper should listen on.
+#	Trapper will listen on all network interfaces if this parameter is missing.
+#
+# Mandatory: no
+# Default:
+{% if zabbix3proxy_listenip %}
+ListenIP={{ zabbix3proxy_listenip }}
+{% endif %}
+
+### Option: HousekeepingFrequency
+#	How often Zabbix will perform housekeeping procedure (in hours).
+#	Housekeeping is removing outdated information from the database.
+#	To prevent Housekeeper from being overloaded, no more than 4 times HousekeepingFrequency
+#	hours of outdated information are deleted in one housekeeping cycle.
+#	To lower load on proxy startup housekeeping is postponed for 30 minutes after proxy start.
+#	With HousekeepingFrequency=0 the housekeeper can be only executed using the runtime control option.
+#	In this case the period of outdated information deleted in one housekeeping cycle is 4 times the
+#	period since the last housekeeping cycle, but not less than 4 hours and not greater than 4 days.
+#
+# Mandatory: no
+# Range: 0-24
+# Default:
+HousekeepingFrequency={{ zabbix3proxy_housekeepingfrequency }}
+
+### Option: CacheSize
+#	Size of configuration cache, in bytes.
+#	Shared memory size, for storing hosts and items data.
+#
+# Mandatory: no
+# Range: 128K-8G
+# Default:
+CacheSize={{ zabbix3proxy_cachesize }}
+
+### Option: StartDBSyncers
+#	Number of pre-forked instances of DB Syncers.
+#
+# Mandatory: no
+# Range: 1-100
+# Default:
+StartDBSyncers={{ zabbix3proxy_startdbsyncers }}
+
+### Option: HistoryCacheSize
+#	Size of history cache, in bytes.
+#	Shared memory size for storing history data.
+#
+# Mandatory: no
+# Range: 128K-2G
+# Default:
+HistoryCacheSize={{ zabbix3proxy_historycachesize }}
+
+### Option: HistoryIndexCacheSize
+#	Size of history index cache, in bytes.
+#	Shared memory size for indexing history cache.
+#
+# Mandatory: no
+# Range: 128K-2G
+# Default:
+HistoryIndexCacheSize={{ zabbix3proxy_historyindexcachesize }}
+
+### Option: Timeout
+#	Specifies how long we wait for agent, SNMP device or external check (in seconds).
+#
+# Mandatory: no
+# Range: 1-30
+# Default:
+Timeout={{ zabbix3proxy_timeout }}
+
+### Option: TrapperTimeout
+#	Specifies how many seconds trapper may spend processing new data.
+#
+# Mandatory: no
+# Range: 1-300
+# Default:
+TrapperTimeout={{ zabbix3proxy_trappertimeout }}
+
+### Option: UnreachablePeriod
+#	After how many seconds of unreachability treat a host as unavailable.
+#
+# Mandatory: no
+# Range: 1-3600
+# Default:
+UnreachablePeriod={{ zabbix3proxy_unreachableperiod }}
+
+### Option: UnavailableDelay
+#	How often host is checked for availability during the unavailability period, in seconds.
+#
+# Mandatory: no
+# Range: 1-3600
+# Default:
+UnavailableDelay={{ zabbix3proxy_unavailabledelay }}
+
+### Option: UnreachableDelay
+#	How often host is checked for availability during the unreachability period, in seconds.
+#
+# Mandatory: no
+# Range: 1-3600
+# Default:
+UnreachableDelay={{ zabbix3proxy_unreachabledelay }}
+
+### Option: ExternalScripts
+#	Full path to location of external scripts.
+#	Default depends on compilation options.
+#
+# Mandatory: no
+# Default:
+ExternalScripts={{ zabbix3proxy_externalscripts }}
+
+### Option: FpingLocation
+#	Location of fping.
+#	Make sure that fping binary has root ownership and SUID flag set.
+#
+# Mandatory: no
+# Default:
+FpingLocation={{ zabbix3proxy_fpinglocation }}
+
+### Option: Fping6Location
+#	Location of fping6.
+#	Make sure that fping6 binary has root ownership and SUID flag set.
+#	Make empty if your fping utility is capable to process IPv6 addresses.
+#
+# Mandatory: no
+# Default:
+Fping6Location={{ zabbix3proxy_fping6location }}
+
+### Option: SSHKeyLocation
+#	Location of public and private keys for SSH checks and actions.
+#
+# Mandatory: no
+# Default:
+{% if zabbix3proxy_sshkeylocation %}
+SSHKeyLocation={{ zabbix3proxy_sshkeylocation }}
+{% endif %}
+
+### Option: LogSlowQueries
+#	How long a database query may take before being logged (in milliseconds).
+#	Only works if DebugLevel set to 3 or 4.
+#	0 - don't log slow queries.
+#
+# Mandatory: no
+# Range: 1-3600000
+# Default:
+LogSlowQueries={{ zabbix3proxy_logslowqueries }}
+
+### Option: TmpDir
+#	Temporary directory.
+#
+# Mandatory: no
+# Default:
+TmpDir={{ zabbix3proxy_tmpdir }}
+
+### Option: AllowRoot
+#	Allow the proxy to run as 'root'. If disabled and the proxy is started by 'root', the proxy
+#	will try to switch to the user specified by the User configuration option instead.
+#	Has no effect if started under a regular user.
+#	0 - do not allow
+#	1 - allow
+#
+# Mandatory: no
+# Default:
+AllowRoot={{ zabbix3proxy_allowroot }}
+
+### Option: User
+#	Drop privileges to a specific, existing user on the system.
+#	Only has effect if run as 'root' and AllowRoot is disabled.
+#
+# Mandatory: no
+# Default:
+User={{ zabbix3proxy_user }}
+
+### Option: Include
+#	You may include individual files or all files in a directory in the configuration file.
+#	Installing Zabbix will create include directory in /usr/local/etc, unless modified during the compile time.
+#
+# Mandatory: no
+# Default:
+{% if zabbix3proxy_include %}        
+{% for inc in zabbix3proxy_include %}
+Include={{ inc }}                     
+{% endfor %}                          
+{% endif %}                           
+
+### Option: SSLCertLocation
+#	Location of SSL client certificates.
+#	This parameter is used only in web monitoring.
+#
+# Mandatory: no
+# Default:
+{% if zabbix3proxy_sslcertlocation %}
+SSLCertLocation={{ zabbix3proxy_sslcertlocation }}
+{% endif %}
+
+### Option: SSLKeyLocation
+#	Location of private keys for SSL client certificates.
+#	This parameter is used only in web monitoring.
+#
+# Mandatory: no
+# Default:
+{% if zabbix3proxy_sslkeylocation %}
+SSLKeyLocation={{ zabbix3proxy_sslkeylocation }}
+{% endif %}
+
+### Option: SSLCALocation
+#	Override the location of certificate authority (CA) files for SSL server certificate verification.
+#	If not set, system-wide directory will be used.
+#	This parameter is used only in web monitoring and SMTP authentication.
+#
+# Mandatory: no
+# Default:
+{% if zabbix3proxy_sslcalocation %}
+SSLCALocation={{ zabbix3proxy_sslcalocation }}
+{% endif %}
+
+####### LOADABLE MODULES #######
+
+### Option: LoadModulePath
+#	Full path to location of server modules.
+#	Default depends on compilation options.
+#
+# Mandatory: no
+# Default:
+LoadModulePath={{ zabbix3proxy_loadmodulepath }}
+
+### Option: LoadModule
+#	Module to load at server startup. Modules are used to extend functionality of the server.
+#	Format: LoadModule=<module.so>
+#	The modules must be located in directory specified by LoadModulePath.
+#	It is allowed to include multiple LoadModule parameters.
+#
+# Mandatory: no
+# Default:
+{% if zabbix3proxy_loadmodule %}
+{% for module in zabbix3proxy_loadmodule %}
+LoadModule={{ module }}
+{% endfor %}
+{% endif %}
+
+####### TLS-RELATED PARAMETERS #######
+
+### Option: TLSCAFile
+#	Full pathname of a file containing the top-level CA(s) certificates for
+#	peer certificate verification.
+#
+# Mandatory: no
+# Default:
+{% if zabbix3proxy_tlscafile %}
+TLSCAFile={{ zabbix3proxy_tlscafile }}
+{% endif %}
+
+### Option: TLSCRLFile
+#	Full pathname of a file containing revoked certificates.
+#
+# Mandatory: no
+# Default:
+{% if zabbix3proxy_tlscrlfile %}
+TLSCRLFile={{ zabbix3proxy_tlscrlfile }}
+{% endif %}
+
+### Option: TLSCertFile
+#	Full pathname of a file containing the server certificate or certificate chain.
+#
+# Mandatory: no
+# Default:
+{% if zabbix3proxy_tlscertfile %}
+TLSCertFile={{ zabbix3proxy_tlscertfile }}
+{% endif %}
+
+### Option: TLSKeyFile
+#	Full pathname of a file containing the server private key.
+#
+# Mandatory: no
+# Default:
+{% if zabbix3proxy_tlskeyfile %}
+TLSKeyFile={{ zabbix3proxy_tlskeyfile }}
+{% endif %}

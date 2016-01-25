@@ -1,0 +1,3 @@
+---
+- name: restart zabbix_proxy
+  service: name=zabbix_proxy state=restarted enabled=yes

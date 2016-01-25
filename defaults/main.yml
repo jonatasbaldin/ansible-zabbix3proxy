@@ -1,0 +1,92 @@
+---
+# DB variables
+zabbix3proxy_db: mysql
+
+# If zabbix3proxy_db_install is False, make sure that info below connects 
+# to a working database loaded with the structure provided by Zabbix
+zabbix3proxy_db_install: True
+
+zabbix3proxy_dbhost: localhost
+zabbix3proxy_dbname: zabbixproxy
+zabbix3proxy_dbschema:
+zabbix3proxy_dbsocket:
+zabbix3proxy_dbport:
+
+zabbix3proxy_dbrootpassword: 123456A!
+zabbix3proxy_dbuser: zabbixproxy
+zabbix3proxy_dbuserpassword: 123456A!
+
+zabbix3proxy_server:
+
+# Download and compile variables
+zabbix3proxy_betaversion: 3.0.0beta1
+zabbix3proxy_downloadurl: http://downloads.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Development/{{ zabbix3proxy_betaversion }}/zabbix-{{ zabbix3proxy_betaversion }}.tar.gz
+zabbix3proxy_compile_options: "--enable-proxy --enable-ipv6 --with-net-snmp --prefix={{ zabbix3proxy_install_path | quote }} --with-{{ zabbix3proxy_db | quote }}"
+
+# Misc variables
+zabbix3proxy_install_path: /usr/local/zabbix # do not use leading '/'
+
+# zabbix_proxy.conf variables
+zabbix3proxy_proxymode: 0
+zabbix3proxy_serverport: 10051
+zabbix3proxy_hostnameitem: system.hostname
+zabbix3proxy_listenport: 10051
+zabbix3proxy_sourceip:
+zabbix3proxy_logtype: file
+zabbix3proxy_logfilesize: 1
+zabbix3proxy_debuglevel:
+zabbix3proxy_pidfile: /tmp/zabbix_proxy.pid
+zabbix3proxy_proxylocalbuffer: 0
+zabbix3proxy_proxyofflinebuffer: 1
+zabbix3proxy_heartbeatfrequency: 60
+zabbix3proxy_configfrequency: 3600
+zabbix3proxy_datasenderfrequency: 1
+zabbix3proxy_startpollers: 5
+zabbix3proxy_startipmipollers: 0
+zabbix3proxy_startpollersunreachable: 1
+zabbix3proxy_starttrappers: 5
+zabbix3proxy_startpingers: 1
+zabbix3proxy_startdiscoverers: 1
+zabbix3proxy_starthttppollers: 1
+zabbix3proxy_javagateway:
+zabbix3proxy_javagatewayport:
+zabbix3proxy_startjavapollers: 0
+zabbix3proxy_startvmwarecollectors: 0
+zabbix3proxy_vmwarefrequency: 60
+zabbix3proxy_vmwareperffrequency: 60
+zabbix3proxy_vmwarecachesize: 8M
+zabbix3proxy_vmwaretimeout: 10
+zabbix3proxy_snmptrapperfile: /tmp/zabbix_traps.tmp
+zabbix3proxy_startsnmptrapper: 0
+zabbix3proxy_listenip:
+zabbix3proxy_housekeepingfrequency: 1
+zabbix3proxy_cachesize: 8M
+zabbix3proxy_startdbsyncers: 4
+zabbix3proxy_historycachesize: 16M
+zabbix3proxy_historyindexcachesize: 4M
+zabbix3proxy_timeout: 4
+zabbix3proxy_trappertimeout: 300
+zabbix3proxy_unreachableperiod: 45
+zabbix3proxy_unavailabledelay: 60
+zabbix3proxy_unreachabledelay: 15
+zabbix3proxy_externalscripts: ${datadir}/zabbix/externalscripts
+zabbix3proxy_fpinglocation: /usr/sbin/fping
+zabbix3proxy_fping6location: /usr/sbin/fping6
+zabbix3proxy_sshkeylocation:
+zabbix3proxy_logslowqueries: 3000
+zabbix3proxy_tmpdir: /tmp
+zabbix3proxy_allowroot: 0
+zabbix3proxy_user: zabbix
+zabbix3proxy_include:
+  - /usr/local/zabbix/etc/zabbix_proxy.conf.d
+zabbix3proxy_sslcertlocation:
+zabbix3proxy_sslkeylocation:                  
+zabbix3proxy_sslcalocation:                   
+zabbix3proxy_loadmodulepath: ${libdir}/modules
+zabbix3proxy_loadmodule:
+  #- module01
+  #- module02                                  
+zabbix3proxy_tlscafile:                       
+zabbix3proxy_tlscrlfile:                      
+zabbix3proxy_tlscertfile:
+zabbix3proxy_tlskeyfile:
